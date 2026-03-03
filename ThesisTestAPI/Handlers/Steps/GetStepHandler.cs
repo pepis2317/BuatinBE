@@ -3,31 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThesisTestAPI.Entities;
 using ThesisTestAPI.Models.Steps;
+using ThesisTestAPI.Services;
 
 namespace ThesisTestAPI.Handlers.Steps
 {
     public class GetStepHandler : IRequestHandler<GetStepRequest, (ProblemDetails?, StepResponse?)>
     {
-        private readonly ThesisDbContext _db;
-        public GetStepHandler(ThesisDbContext db)
+        private readonly StepService _stepService;
+        public GetStepHandler(StepService stepService)
         {
-            _db = db;
+            _stepService = stepService;
         }
 
         public async Task<(ProblemDetails?, StepResponse?)> Handle(GetStepRequest request, CancellationToken cancellationToken)
         {
-            var step = await _db.Steps.Where(q => q.StepId == request.StepId).Select(q=>new StepResponse
-            {
-                StepId = q.StepId,
-                Title = q.Title,
-                Description = q.Description,
-                TransactionId = q.TransactionId == null ? null : q.TransactionId.ToString(),
-                MinCompleteEstimate = q.MinCompleteEstimate.ToString("dd/MM/yyyy"),
-                MaxCompleteEstimate = q.MaxCompleteEstimate.ToString("dd/MM/yyyy"),
-                Price = q.Amount,
-                Status = q.Status,
-            }).FirstOrDefaultAsync();
-            return (null, step);
+            var result = await _stepService.GetStep(request);
+            return (null, result);
         }
     }
 }

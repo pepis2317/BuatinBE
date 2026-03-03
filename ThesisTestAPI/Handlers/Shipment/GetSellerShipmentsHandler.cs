@@ -10,42 +10,15 @@ namespace ThesisTestAPI.Handlers.Shipment
 {
     public class GetSellerShipmentsHandler : IRequestHandler<GetSellerShipmentsRequest, (ProblemDetails?, PaginatedShipmentResponse?)>
     {
-        private readonly ThesisDbContext _db;
-        public GetSellerShipmentsHandler(ThesisDbContext db)
+        private readonly ShipmentService _service;
+        public GetSellerShipmentsHandler(ShipmentService service)
         {
-            _db = db;
+            _service = service;
         }
         public async Task<(ProblemDetails?, PaginatedShipmentResponse?)> Handle(GetSellerShipmentsRequest request, CancellationToken cancellationToken)
         {
-            var processIds = await _db.Processes
-                .Where(q => q.Request.Seller.OwnerId == request.UserId)
-                .Select(q => q.ProcessId)
-                .ToListAsync();
-            
-            
-            var query = _db.Shipments .Where(q => processIds.Contains(q.ProcessId));
-
-            var total = await query.CountAsync();
-
-            var shipments = await query
-                .OrderByDescending(q => q.CreatedAt)
-                .Skip((request.pageNumber - 1) * request.pageSize)
-                .Take(request.pageSize)
-                .Select(shipment => new ShipmentResponse
-                {
-                    ShipmentId = shipment.ShipmentId,
-                    Name = shipment.Name,
-                    Description = shipment.Description,
-                    Status = shipment.Status,
-                    OrderId = shipment.OrderId
-                })
-                .ToListAsync();
-
-            return (null, new PaginatedShipmentResponse
-            {
-                Total = total,
-                Shipments = shipments
-            });
+            var result = await _service.GetSellerShipments(request);
+            return (null, result);
         }
     }
 }

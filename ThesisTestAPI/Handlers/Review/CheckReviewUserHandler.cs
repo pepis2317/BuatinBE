@@ -3,25 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThesisTestAPI.Entities;
 using ThesisTestAPI.Models.Review;
+using ThesisTestAPI.Services;
 
 namespace ThesisTestAPI.Handlers.Review
 {
     public class CheckReviewUserHandler : IRequestHandler<CheckReviewUser, (ProblemDetails?, bool?)>
     {
-        private readonly ThesisDbContext _db;
-        public CheckReviewUserHandler(ThesisDbContext db)
+        private readonly ReviewService _service;
+        public CheckReviewUserHandler(ReviewService service)
         {
-            _db = db;
+            _service = service;
         }
 
         public async Task<(ProblemDetails?, bool?)> Handle(CheckReviewUser request, CancellationToken cancellationToken)
         {
-            var process = await _db.Processes
-               .Include(q => q.Request).ThenInclude(q => q.RequestNavigation)
-               .Include(q => q.Request).ThenInclude(q => q.Seller)
-               .Where(q => q.Request.Seller.OwnerId == request.AuthorId && q.Request.RequestNavigation.AuthorId == request.UserId
-               && (q.Status == Enum.ProcessStatuses.COMPLETED || q.Status == Enum.ProcessStatuses.CANCELLED)).AnyAsync();
-            return (null, process);
+            var result = await _service.CheckReviewUser(request);
+            return (null, result);
         }
     }
 }

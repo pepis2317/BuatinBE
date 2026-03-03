@@ -3,26 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThesisTestAPI.Entities;
 using ThesisTestAPI.Models.Review;
+using ThesisTestAPI.Services;
 
 namespace ThesisTestAPI.Handlers.Review
 {
     public class GetUserStatsHandler : IRequestHandler<GetUserStatsRequest, (ProblemDetails?, UserStatsResponse?)>
     {
-        private readonly ThesisDbContext _db;
-        public GetUserStatsHandler(ThesisDbContext db)
+        private readonly ReviewService _service;
+        public GetUserStatsHandler(ReviewService service)
         {
-            _db = db;
+            _service = service;
         }
 
         public async Task<(ProblemDetails?, UserStatsResponse?)> Handle(GetUserStatsRequest request, CancellationToken cancellationToken)
         {
-            var reviewIds = await _db.UserReviews.Where(q => q.UserId == request.UserId).Select(q => q.UserReviewId).ToListAsync();
-            var ratings = await _db.Ratings.Include(q => q.RatingNavigation).Where(q => reviewIds.Contains(q.RatingNavigation.ContentId)).Select(q => q.Rating1).AverageAsync();
-            return (null, new UserStatsResponse
-            {
-                Rating = ratings != null ? (double)ratings : 0,
-                Reviews = reviewIds.Count,
-            });
+            var result = await _service.GetUserStats(request);
+            return (null, result);
         }
     }
 }

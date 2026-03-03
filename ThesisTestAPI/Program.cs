@@ -72,6 +72,7 @@ builder.Services.AddTransient<NotificationService>();
 builder.Services.AddTransient<WalletTransactionService>();
 builder.Services.AddTransient<StepService>();
 builder.Services.AddTransient<ShipmentService>();
+builder.Services.AddTransient<ReviewService>();
 builder.Services.AddScoped<IXmlRepository, DatabaseXmlRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDataProtection()

@@ -28,12 +28,6 @@ namespace ThesisTestAPI.Controllers
             };
             return problemDetails;
         }
-        [HttpPost("transaction-test")]
-        public async Task<IActionResult> TestTransaction(TestTransactionRequest request)
-        {
-            var result = await _mediator.Send(request);
-            return Ok(result.Item2);
-        }
         [Authorize]
         [HttpPost("deposit-funds")]
         public async Task<IActionResult> DepositFunds([FromBody] DepositRequest request)

@@ -28,4 +28,10 @@
     <ProjectReference Include="..\ThesisTestAPI.Entities\ThesisTestAPI.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>

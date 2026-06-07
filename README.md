@@ -35,7 +35,7 @@ handles refunds and cancellations so neither party is left hanging.
 | Backend | .NET Core |
 | Database | Microsoft SQL Server |
 | Auth | JWT with refresh token |
-| Build & Deploy | EAS Build |
+| Build & Deploy | Dockerize & run on Ubuntu VPS|
 
 ### Installation
 ```bash

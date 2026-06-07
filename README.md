@@ -1,5 +1,5 @@
-# BUATIN (Mobile Frontend)
-Mobile frontend of Buatin, a milestone based physical products commissioning app that 
+# BUATIN (Backend)
+Backend of Buatin, a milestone based physical products commissioning app that 
 covers production, delivery, communication, and seller discovery
 
 ### Related Repos
